@@ -1,0 +1,4 @@
+spa
+===
+
+Single Page Application
