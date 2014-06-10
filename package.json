@@ -1,0 +1,27 @@
+{
+  "name": "spa",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "^3.4.8",
+    "express-jwt": "^0.2.0",
+    "jsonwebtoken": "^0.1.0"
+  },
+  "devDependencies": {
+    "colors": "^0.6.2",
+    "gulp": "^3.5.5",
+    "gulp-bower-files": "^0.1.11",
+    "gulp-clean": "^0.2.4",
+    "gulp-filter": "^0.3.1",
+    "gulp-flatten": "0.0.2",
+    "gulp-less": "^1.2.2",
+    "gulp-util": "^2.2.14",
+    "less": "^1.7.0",
+    "path": "^0.4.9"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "gulp test"
+  }
+}
