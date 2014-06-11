@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var clean = require('gulp-clean');
@@ -5,101 +7,99 @@ var less = require('gulp-less');
 var flatten = require('gulp-flatten');
 var gulpFilter = require('gulp-filter');
 var path = require('path');
-var gulpBowerFiles = require('gulp-bower-files');
 
 // filters
 var filterCSS = gulpFilter('**/bootstrap.*css');
-var filterJS = gulpFilter(['!**/bootstrap.js', '!**/jquery*']);
 var filterCSSMAP = gulpFilter(['**/bootstrap*']);
 
-// temporary dir for vendor js files
-var VENDOR = "./vendor";
-var BOWER_COMPONENTS = "./bower_components";
+// project's directory structure
+var BUILD_DIR = "./build";
+var DIST_DIR = "./dist";
 
-// application source code (devel)
-var SRC = "./app";
-var SRC_LESS_ALL = path.join("less", "**", "*.less");
-
-// application build for debugging (devel)
-var BLD = "./build";
-var BLD_CSS = BLD + "/css";
-var BLD_FONT = BLD + "/fonts";
-var BLD_JAVASCRIPT = BLD + "/js";
-var BLD_IMAGES = path.join(BLD, "img");
-
-// application distribution (prod) - releasing
-var DIST = "./dist";
-var DIST_ALL = path.join(DIST, "**");
-var DIST_CSS = path.join(DIST, "css");
-var DIST_JAVASCRIPT = path.join(DIST, "js");
-var DIST_IMAGES = path.join(DIST, "img");
+var config = {
+    dirs: {
+        src: {
+            app: "./app",
+            bower_components: "./bower_components",
+            less: "./less"
+        },
+        build: {
+            root: BUILD_DIR,
+            css: BUILD_DIR + "/css",
+            fonts: BUILD_DIR + "/fonts",
+            js: BUILD_DIR + "/js"
+        },
+        dist: {
+            root: DIST_DIR
+        }
+    },
+    filter: {
+        js: [
+            'angular/angular.min.js',
+            'angular-strap/dist/angular-strap.min.js',
+            'angular-strap/dist/angular-strap.tpl.min.js'
+        ],
+        css: [
+            'bootstrap/dist/css/bootstrap.min.css'
+        ]
+    }
+};
 
 //
 // BUILD
 //
+
 gulp.task('clean', function() {
-    return gulp.src(BLD, {read: false})
+    return gulp.src(config.dirs.build.root, {read: false})
             .pipe(clean());
 });
 
-// copy bower_components JavaScript files to VENDOR directory
-gulp.task('bower-files', function() {
-    gulpBowerFiles().pipe(gulp.dest(VENDOR));
-});
-
-// copy css files to VENDOR directory
-gulp.task('copy-css', ['bower-files'], function() {
-    return gulp.src(VENDOR + "/**/*.css")
-            .pipe(filterCSS)
+// copy css files
+gulp.task('copy-css', function() {
+    return gulp.src(config.dirs.src.bower_components + "/**/*.css")
+            .pipe(gulpFilter(config.filter.css))
             .pipe(flatten())
-            .pipe(gulp.dest(BLD_CSS));
+            .pipe(gulp.dest(config.dirs.build.css));
 });
 
-// copy css map files to VENDOR directory
-gulp.task('copy-css-map', ['copy-css'], function() {
-    return gulp.src(BOWER_COMPONENTS + "/**/*.map")
-            .pipe(filterCSSMAP)
+// copy js files
+gulp.task('copy-js', function() {
+    return gulp.src(config.dirs.src.bower_components + "/**/*.js")
+            .pipe(gulpFilter(config.filter.js))
             .pipe(flatten())
-            .pipe(gulp.dest(BLD_CSS));
+            .pipe(gulp.dest(config.dirs.build.js));
 });
 
-// copy js files from vendor
-gulp.task('copy-js', ['bower-files'], function() {
-    return gulp.src(VENDOR + "/**/*.js")
-            .pipe(filterJS)
-            .pipe(flatten())
-            .pipe(gulp.dest(BLD_JAVASCRIPT));
-});
-
-// copy font files from vendor
+// copy font files
 gulp.task('copy-font', function() {
-    return gulp.src(BOWER_COMPONENTS + "/**/fonts/*")
+    return gulp.src(config.dirs.src.bower_components + "/**/fonts/*")
             .pipe(flatten())
-            .pipe(gulp.dest(BLD_FONT));
+            .pipe(gulp.dest(config.dirs.build.fonts));
 });
 
 // copy and transform less -> css
 gulp.task('create-css-from-less', ['copy-css'], function() {
-    return gulp.src("./less/**/*.less")
+    return gulp.src(config.dirs.src.less + "/**/*.less")
             .pipe(less())
-            .pipe(gulp.dest(BLD_CSS))
+            .pipe(gulp.dest(config.dirs.build.css))
             .on('error', gutil.log);
 });
 
-// automatic build on file change
+// watchers
 gulp.task('watch', function() {
-    //gulp.watch(SRC + "/**/*", ['build']);
-    gulp.watch("./less/**/*.less", ['create-css-from-less']);
+    gulp.watch(config.dirs.src.app + "/**/*", ['copy-app']);
+    gulp.watch(config.dirs.src.less + "/**/*.less", ['create-css-from-less']);
+    gulp.watch(config.dirs.src.bower_components + "/**/*", ['copy-css', 'copy-js', 'copy-font']);
 });
 
 // copy angular application
 gulp.task('copy-app', function() {
-    return gulp.src(SRC + "/**/*")
-            .pipe(gulp.dest(BLD));
+    return gulp.src(config.dirs.src.app + "/**/*")
+            .pipe(gulp.dest(config.dirs.build.root));
 });
 
 // copy app to build
-gulp.task('build', ['copy-app', 'copy-css', 'copy-js', 'copy-css-map', 'copy-font', 'create-css-from-less']);
+gulp.task('build', ['copy-app', 'copy-css', 'copy-js', 'copy-font', 'create-css-from-less']);
 
 
 

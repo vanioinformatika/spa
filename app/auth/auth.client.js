@@ -1,6 +1,6 @@
 'use strict';
 
-var myApp = angular.module('myApp', ['ngSanitize', 'ui.bootstrap']);
+var myApp = angular.module('myApp', ['mgcrea.ngStrap']);
 
 //this is used to parse the profile
 function url_base64_decode(str) {
