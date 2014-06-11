@@ -1,6 +1,6 @@
 'use strict';
 
-var myApp = angular.module('myApp', ['mgcrea.ngStrap']);
+var authModule = angular.module('vanio.auth', []);
 
 //this is used to parse the profile
 function url_base64_decode(str) {
@@ -20,7 +20,7 @@ function url_base64_decode(str) {
     return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
 }
 
-myApp.controller('UserCtrl', function($rootScope, $scope, $http, $window, $sce) {
+authModule.controller('UserCtrl', function($rootScope, $scope, $http, $window, $sce) {
     
     // user object set in $rootScope
     $rootScope.user = {username: 'john.doe', password: 'foobar'};
@@ -81,7 +81,7 @@ myApp.controller('UserCtrl', function($rootScope, $scope, $http, $window, $sce) 
 
 });
 
-myApp.factory('authInterceptor', function($rootScope, $q, $window) {
+authModule.factory('authInterceptor', function($rootScope, $q, $window) {
     return {
         request: function(config) {
             config.headers = config.headers || {};
@@ -111,7 +111,7 @@ myApp.factory('authInterceptor', function($rootScope, $q, $window) {
     };
 });
 
-myApp.config(function($httpProvider) {
+authModule.config(function($httpProvider) {
     $httpProvider.interceptors.push('authInterceptor');
 });
 

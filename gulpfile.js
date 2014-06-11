@@ -1,5 +1,21 @@
 'use strict';
 
+/**
+ * For developing application you must start it with: nodemon test/mock_server/auth.server.js
+ * 
+ * Build means application created in build directory in debuggable state.
+ * Dist means application created from build to production.
+ * 
+ * Src -> Build -> Dist
+ * 
+ * After you have to run this command in order:
+ * gulp clean - delete build directory
+ * gulp build - create build directory with application code, for developing: create css from less, etc.
+ * gulp watch - watch file changes and move (transform) to build directory: you can view in browser
+ * 
+ * TODO: distribution task: create distributable application
+ */
+
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var clean = require('gulp-clean');
@@ -8,14 +24,9 @@ var flatten = require('gulp-flatten');
 var gulpFilter = require('gulp-filter');
 var path = require('path');
 
-// filters
-var filterCSS = gulpFilter('**/bootstrap.*css');
-var filterCSSMAP = gulpFilter(['**/bootstrap*']);
-
 // project's directory structure
 var BUILD_DIR = "./build";
 var DIST_DIR = "./dist";
-
 var config = {
     dirs: {
         src: {
@@ -36,6 +47,7 @@ var config = {
     filter: {
         js: [
             'angular/angular.min.js',
+            'angular/angular.min.js.map',
             'angular-strap/dist/angular-strap.min.js',
             'angular-strap/dist/angular-strap.tpl.min.js'
         ],
@@ -64,7 +76,7 @@ gulp.task('copy-css', function() {
 
 // copy js files
 gulp.task('copy-js', function() {
-    return gulp.src(config.dirs.src.bower_components + "/**/*.js")
+    return gulp.src(config.dirs.src.bower_components + "/**/*")
             .pipe(gulpFilter(config.filter.js))
             .pipe(flatten())
             .pipe(gulp.dest(config.dirs.build.js));
