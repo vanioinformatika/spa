@@ -25,7 +25,7 @@ var app = express();
 // your secret
 var secret = 'this is the secret secret secret 12356';
 // working dir for static files
-var workingDir = '/home/patoi/work/git_local/vanio/spa';
+var workingDir = '/home/patoi/work/git_local/vanio/spa/build';
 // JWT options: https://github.com/auth0/node-jsonwebtoken
 var jwtOptions = {algorithm: 'HS256', expiresInMinutes: 1};
 
