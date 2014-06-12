@@ -98,13 +98,6 @@ gulp.task('create-css-from-less', ['copy-css'], function() {
             .on('error', gutil.log);
 });
 
-// watchers
-gulp.task('watch', function() {
-    gulp.watch(config.dirs.src.app + "/**/*", ['copy-app', 'copy-app-js']);
-    gulp.watch(config.dirs.src.less + "/**/*.less", ['create-css-from-less']);
-    gulp.watch(config.dirs.src.bower_components + "/**/*", ['copy-css', 'copy-js', 'copy-font']);
-});
-
 // copy angular application without js
 gulp.task('copy-app', function() {
     return gulp.src(config.dirs.src.app + "/**/*")
@@ -122,6 +115,12 @@ gulp.task('copy-app-js', function() {
 // copy app to build
 gulp.task('build', ['copy-app', 'copy-app-js', 'copy-css', 'copy-js', 'copy-font', 'create-css-from-less']);
 
+// watchers
+gulp.task('watch', function() {
+    gulp.watch(config.dirs.src.app + "/**/*", ['copy-app', 'copy-app-js']);
+    gulp.watch(config.dirs.src.less + "/**/*.less", ['create-css-from-less']);
+    gulp.watch(config.dirs.src.bower_components + "/**/*", ['copy-css', 'copy-js', 'copy-font']);
+});
 
 
 //
