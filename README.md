@@ -7,6 +7,12 @@ __EXPERIMENTAL Application!__
 
 ## Application code states
 
+There are 3 states of code: SRC, BUILD and DIST.
+
+ - SRC for developing and unit testing. (development)
+ - BUILD for integration testing and debugging. (staging)
+ - DIST for acceptance testing and production. (production)
+
 ### SRC for developing (TDD)
 
 Application source code for developing and unit testing, under __app, less, img and test dirs__
@@ -25,9 +31,9 @@ Debuggable code.
 
 Start (Terminal Window 3) a webserver with `nodemon test/mock_server/auth.server.js` and start in browser http://localhost:8080
 
-Mock server give you the static files and the mock data for integration testing.
+Mock server gives you the static files and the mock data for integration testing.
 
-### DIST
+### DIST (TODO)
 
 Distributable application code: optimalized code (e.g. minify, uglify, etc.)
 
