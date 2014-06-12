@@ -5,6 +5,16 @@ Single Page Application
 
 __EXPERIMENTAL Application!__
 
+## Creating development environment
+
+ - Install nodejs.
+ - Clone this github project.
+ - In spa directory: npm install && bower install
+ - Open 3 terminal window and start `karma start karma.conf.js` `gulp clean && gulp build && gulp watch` `nodemon test/mock_server/auth.server.js`
+ - Edit code.
+
+Maybe you must install some global nodejs package (e.g. npm install -g nodemon).
+
 ## Application code states
 
 There are 3 states of code: SRC, BUILD and DIST.
