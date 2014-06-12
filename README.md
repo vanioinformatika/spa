@@ -5,7 +5,7 @@ Single Page Application
 
 __EXPERIMENTAL Application!__
 
-## Application code state
+## Application code states
 
 ### SRC for developing (TDD)
 
@@ -32,3 +32,9 @@ Mock server give you the static files and the mock data for integration testing.
 Distributable application code: optimalized code (e.g. minify, uglify, etc.)
 
 TODO: acceptance test, CI. 
+
+## Testing and metrics
+
+Test results generated into __test_out__ and __coverage__ directory.
+
+ 

@@ -45,6 +45,7 @@ authModule.controller('UserCtrl', function($rootScope, $scope, $http, $window, $
         delete $window.sessionStorage.token;
     };
 
+    // TODO: move to other js file/controll
     $scope.callRestricted = function() {
         $http({url: '/api/restricted', method: 'GET'})
                 .success(function(data, status, headers, config) {
