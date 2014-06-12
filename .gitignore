@@ -10,6 +10,7 @@ vendor
 /nbproject/private/
 dist
 build
+test_out
 .tmp
 .sass-cache
 .DS_Store
