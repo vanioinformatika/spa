@@ -22,6 +22,7 @@ var clean = require('gulp-clean');
 var less = require('gulp-less');
 var flatten = require('gulp-flatten');
 var gulpFilter = require('gulp-filter');
+var concat = require('gulp-concat');
 var path = require('path');
 
 // project's directory structure
@@ -99,19 +100,27 @@ gulp.task('create-css-from-less', ['copy-css'], function() {
 
 // watchers
 gulp.task('watch', function() {
-    gulp.watch(config.dirs.src.app + "/**/*", ['copy-app']);
+    gulp.watch(config.dirs.src.app + "/**/*", ['copy-app', 'copy-app-js']);
     gulp.watch(config.dirs.src.less + "/**/*.less", ['create-css-from-less']);
     gulp.watch(config.dirs.src.bower_components + "/**/*", ['copy-css', 'copy-js', 'copy-font']);
 });
 
-// copy angular application
+// copy angular application without js
 gulp.task('copy-app', function() {
     return gulp.src(config.dirs.src.app + "/**/*")
+            .pipe(gulpFilter('!**/*.js'))
+            .pipe(gulp.dest(config.dirs.build.root));
+});
+
+// copy and concat angular application js
+gulp.task('copy-app-js', function() {
+    return gulp.src(config.dirs.src.app + "/**/*.js")
+            .pipe(concat('all.js'))
             .pipe(gulp.dest(config.dirs.build.root));
 });
 
 // copy app to build
-gulp.task('build', ['copy-app', 'copy-css', 'copy-js', 'copy-font', 'create-css-from-less']);
+gulp.task('build', ['copy-app', 'copy-app-js', 'copy-css', 'copy-js', 'copy-font', 'create-css-from-less']);
 
 
 

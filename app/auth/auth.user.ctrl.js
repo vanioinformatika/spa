@@ -1,27 +1,10 @@
 'use strict';
 
-var authModule = angular.module('vanio.auth', []);
-
-//this is used to parse the profile
-function url_base64_decode(str) {
-    var output = str.replace('-', '+').replace('_', '/');
-    switch (output.length % 4) {
-        case 0:
-            break;
-        case 2:
-            output += '==';
-            break;
-        case 3:
-            output += '=';
-            break;
-        default:
-            throw 'Illegal base64url string!';
-    }
-    return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
-}
-
+/**
+ * Control user authentication.
+ */
 authModule.controller('UserCtrl', function($rootScope, $scope, $http, $window, $sce) {
-    
+
     // user object set in $rootScope
     $rootScope.user = {username: 'john.doe', password: 'foobar'};
     $rootScope.isAuthenticated = false;
@@ -81,37 +64,21 @@ authModule.controller('UserCtrl', function($rootScope, $scope, $http, $window, $
 
 });
 
-authModule.factory('authInterceptor', function($rootScope, $q, $window) {
-    return {
-        request: function(config) {
-            config.headers = config.headers || {};
-            if ($window.sessionStorage.token) {
-                config.headers['Authorization'] = 'Bearer ' + $window.sessionStorage.token;
-            }
-            return config;
-        },
-        response: function(response) {
-            // respone has Authorization HTTP header, and token will be saved into the sessionStorage
-            var tokenWithBearer = response.headers('Authorization');
-            if (tokenWithBearer !== null) {
-                var parts = tokenWithBearer.split(' ');
-                var token = parts[1];
-                $window.sessionStorage.token = token;
-            }
-            return response;
-        },
-        responseError: function(rejection) {
-            if (rejection.status === 401) {
-                // handle the case where the user is not authenticated
-                delete $window.sessionStorage.token;
-                $rootScope.isAuthenticated = false;
-            }
-            return $q.reject(rejection);
-        }
-    };
-});
-
-authModule.config(function($httpProvider) {
-    $httpProvider.interceptors.push('authInterceptor');
-});
+//this is used to parse the profile
+function url_base64_decode(str) {
+    var output = str.replace('-', '+').replace('_', '/');
+    switch (output.length % 4) {
+        case 0:
+            break;
+        case 2:
+            output += '==';
+            break;
+        case 3:
+            output += '=';
+            break;
+        default:
+            throw 'Illegal base64url string!';
+    }
+    return window.atob(output); //polifyll https://github.com/davidchambers/Base64.js
+}
 
